@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Birthday Surprise</title>
+	<title>Birthday Surprise 🎂</title>
 	<link rel="icon" href="/public/favicon.ico" type="image/x-icon">
 	<link href="style.css" rel="stylesheet">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,17 +14,24 @@
 
 <body>
 	<div id="volume-reminder">
-		<div id="volume-icon">🔊</div>
-		<p>Turn up the volume and click me</p>
+		<div id="volume-icon">✨🔊</div>
+		<h2>Let's Celebrate! 🎉</h2>
+		<p class="main-instruction">Turn up your volume and click to begin the birthday song! 🎶</p>
+		<p class="sub-instruction">After the music, blow out the candles! 🕯️</p>
+		<p class="tip">(Hold the screen or blow into microphone) 🎤</p>
 	</div>
 	<audio id="happy-birthday-audio">
 		<source src="/happy-birthday.mp3" type="audio/mpeg">
 	</audio>
 	<div id="hold-reminder">
-		<p>Hold the screen to blow out the candles</p>
+		<h2>Make a Magical Wish! ✨</h2>
+		<p class="main-instruction">Now it's time to blow out the candles! 🎂</p>
+		<p class="sub-instruction">Make your secret birthday wish come true! 💫</p>
 	</div>
 	<div id="congratulation-overlay">
-		<div id="congratulation-text">Happy Birthday!</div>
+		<div id="congratulation-text">
+			<h1>🎉 Happy Birthday! 🎊</h1>
+		</div>
 	</div>
 	<script>
 		const audio = document.getElementById('happy-birthday-audio');
