@@ -11,63 +11,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* فقط استایل تایمر معکوس اضافه شده */
-        .song-countdown {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            display: none;
-            align-items: center;
-            gap: 12px;
-            background: linear-gradient(45deg, #ff3366, #ff9933);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: bold;
-            z-index: 1002;
-            box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
-            animation: pulseCountdown 2s infinite alternate;
-        }
-        
-        .countdown-number {
-            background: white;
-            color: #ff3366;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3em;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-        
-        .countdown-label {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.3;
-        }
-        
-        .countdown-label small {
-            font-size: 0.7em;
-            opacity: 0.9;
-        }
-        
-        @keyframes pulseCountdown {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 5px 20px rgba(255, 51, 102, 0.4);
-            }
-            100% {
-                transform: scale(1.05);
-                box-shadow: 0 8px 25px rgba(255, 51, 102, 0.6);
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -88,14 +31,12 @@
     </div>
 
     <div id="volume-reminder">
-        <div id="volume-icon">
-            <i class="fas fa-volume-up"></i>
-            <i class="fas fa-star"></i>
-        </div>
         <h2>Let's Celebrate! <i class="fas fa-confetti"></i></h2>
         <p class="main-instruction"><i class="fas fa-music"></i> Turn up your volume and click to begin the birthday song!</p>
         <p class="sub-instruction"><i class="fas fa-candle-holder"></i> After the music, blow out the candles!</p>
-        <p class="tip"><i class="fas fa-microphone"></i> Hold the screen or blow into microphone</p>
+        <p class="tip"> <i class="fas fa-hand-point-down"></i>
+            Tap or Click anywhere<br>to see the cake and start the song!
+    </p>
     </div>
     
     <audio id="happy-birthday-audio">
@@ -108,10 +49,10 @@
         <p class="sub-instruction"><i class="fas fa-seedling"></i> Make your secret birthday wish come true!</p>
     </div>
     
-    <!-- تایمر معکوس اضافه شده -->
+    <!-- تایمر معکوس با قابلیت تغییر متن -->
     <div class="song-countdown" id="song-countdown">
         <div class="countdown-number" id="countdown-number">38</div>
-        <div class="countdown-label">
+        <div class="countdown-label" id="countdown-label">
             <span>Song Time</span>
             <small>seconds remaining</small>
         </div>
@@ -124,6 +65,9 @@
             <h4 id="personalized-name"></h4>
         </div>
     </div>
+
+    <!-- کانواس جدید برای افکت کنفتی -->
+    <canvas id="confetti-canvas"></canvas>
     
     <script>
         // Store user name globally
@@ -140,13 +84,15 @@
         // متغیرهای تایمر معکوس اضافه شده
         const songCountdown = document.getElementById('song-countdown');
         const countdownNumber = document.getElementById('countdown-number');
+        const countdownLabel = document.getElementById('countdown-label'); // برای تغییر متن
         let songCountdownValue = 38;
         let songCountdownInterval;
         
-        // تابع شروع تایمر معکوس اضافه شده
+        // تابع شروع تایمر معکوس (به‌روزرسانی شده)
         function startSongCountdown() {
             songCountdownValue = 38;
             countdownNumber.textContent = songCountdownValue;
+            countdownLabel.innerHTML = `<span>Song Time</span><small>seconds remaining</small>`;
             songCountdown.style.display = 'flex';
             
             songCountdownInterval = setInterval(() => {
@@ -155,7 +101,12 @@
                 
                 if (songCountdownValue <= 0) {
                     clearInterval(songCountdownInterval);
-                    songCountdown.style.display = 'none';
+                    // وقتی آهنگ تموم شد → نمایش "Wait..."
+                    countdownNumber.textContent = '★';
+                    countdownLabel.innerHTML = `
+                        <span style="font-size: 1.1em; font-weight: bold;">Wait...</span>
+                        <small>getting ready</small>
+                    `;
                 }
             }, 1000);
         }
@@ -217,12 +168,125 @@
             
             // شروع تایمر معکوس وقتی آهنگ پخش می‌شود
             startSongCountdown();
+
+            // فعال‌سازی افکت کنفتی جدید
+            startConfetti();
         });
         
         // پاک کردن interval هنگام بسته شدن صفحه
         window.addEventListener('beforeunload', function() {
             if (songCountdownInterval) clearInterval(songCountdownInterval);
         });
+
+        // ================== ویژگی جدید: تشخیص نمایش hold-reminder و تغییر متن به "Blow!" ==================
+        const holdReminder = document.getElementById('hold-reminder');
+        const observer = new MutationObserver(() => {
+            if (holdReminder.style.display === 'flex' || holdReminder.style.display === 'block' || 
+                window.getComputedStyle(holdReminder).display !== 'none') {
+                
+                songCountdown.style.display = 'flex'; // دوباره نمایش بده اگر مخفی شده بود
+                countdownNumber.textContent = '🎤';
+                countdownLabel.innerHTML = `
+                    <span style="font-size: 1.3em; font-weight: bold; letter-spacing: 1px;">Blow!</span>
+                    <small>into microphone</small>
+                `;
+            }
+        });
+
+        observer.observe(holdReminder, {
+            attributes: true,
+            attributeFilter: ['style', 'class']
+        });
+
+        // همچنین چک اولیه در صورت لود شدن صفحه با حالت فعال
+        if (window.getComputedStyle(holdReminder).display !== 'none') {
+            countdownNumber.textContent = '🎤';
+            countdownLabel.innerHTML = `<span style="font-size: 1.3em; font-weight: bold;">Blow!</span><small>into microphone</small>`;
+            songCountdown.style.display = 'flex';
+        }
+        // =================================================================================================
+
+        // ================== ویژگی جدید: افکت کنفتی ==================
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const ctx = confettiCanvas.getContext('2d');
+        let confettiParticles = [];
+        let confettiAnimation;
+
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        });
+
+        function randomColor() {
+            const colors = ['#ff3366', '#ff9933', '#ffd700', '#ff69b4', '#00ffcc', '#ff4500', '#9400d3', '#00bfff'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function createConfetti() {
+            return {
+                x: Math.random() * confettiCanvas.width,
+                y: -10,
+                size: Math.random() * 8 + 5,
+                speedY: Math.random() * 3 + 2,
+                speedX: Math.random() * 3 - 1.5,
+                rotation: Math.random() * 360,
+                rotationSpeed: Math.random() * 10 - 5,
+                color: randomColor(),
+                opacity: 1
+            };
+        }
+
+        function startConfetti() {
+            // پاک کردن کنفتی قبلی اگر وجود داشت
+            cancelAnimationFrame(confettiAnimation);
+            confettiParticles = [];
+
+            function animate() {
+                ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+                // ایجاد ذرات جدید
+                if (Math.random() > 0.3) {
+                    confettiParticles.push(createConfetti());
+                }
+
+                confettiParticles.forEach((p, i) => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rotation += p.rotationSpeed;
+                    p.opacity = 1 - (p.y / confettiCanvas.height);
+
+                    if (p.y > confettiCanvas.height || p.opacity <= 0) {
+                        confettiParticles.splice(i, 1);
+                    }
+
+                    ctx.save();
+                    ctx.globalAlpha = p.opacity;
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.5);
+                    ctx.restore();
+                });
+
+                if (confettiParticles.length > 0 || audio.currentTime < audio.duration - 1) {
+                    confettiAnimation = requestAnimationFrame(animate);
+                }
+            }
+
+            animate();
+
+            // توقف خودکار کنفتی بعد از پایان آهنگ
+            audio.addEventListener('ended', () => {
+                setTimeout(() => {
+                    confettiParticles = [];
+                    ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+                }, 2000);
+            });
+        }
+        // ============================================================
     </script>
     <script type="module" src="script.js"></script>
 </body>

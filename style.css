@@ -1,26 +1,40 @@
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   overflow: hidden;
   margin: 0;
-  background: linear-gradient(135deg, #fff7ed 0%, #fee2e2 100%); /* از صورتی به نارنجی-قرمز ملایم */
+  font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #fff7ed 0%, #fee2e2 100%);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* New styles for name input screen */
+/* Name Input Screen - بهبود یافته و ریسپانسیو */
 #name-input-screen {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, rgba(255, 247, 237, 0.95), rgba(254, 226, 226, 0.98));
+  background: linear-gradient(45deg, 
+    rgba(255, 247, 237, 0.98), 
+    rgba(254, 226, 226, 0.97));
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  color: #dc2626; /* قرمز اصلی به جای صورتی */
+  color: #dc2626;
   opacity: 0;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 2000;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
+  padding: 20px;
 }
 
 #name-input-screen.show {
@@ -28,249 +42,494 @@ body {
 }
 
 .input-container {
-  background: rgba(220, 38, 38, 0.15); /* قرمز شفاف */
-  padding: 2.5rem;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border-radius: 24px;
   text-align: center;
-  max-width: 500px;
-  width: 90%;
-  animation: float 3s ease-in-out infinite;
-  backdrop-filter: blur(10px);
-  border: 2px solid #dc2626; /* قرمز غنی */
-  box-shadow: 0 0 0 4px #f87171, 0 0 0 6px #dc2626; /* سایه‌های قرمز ملایم */
+  max-width: min(600px, 90vw);
+  width: 100%;
+  animation: gentleFloat 4s ease-in-out infinite;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  box-shadow: 
+    0 20px 60px rgba(220, 38, 38, 0.15),
+    0 8px 32px rgba(220, 38, 38, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.input-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, 
+    #dc2626, 
+    #f87171, 
+    #fb923c);
+  border-radius: 24px 24px 0 0;
 }
 
 .input-container h2 {
-  font-size: 2.5em;
-  margin-bottom: 20px;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
   color: #dc2626;
-  text-shadow: 2px 2px 0 #f87171, 4px 4px 0 #fee2e2;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #dc2626, #f87171);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  position: relative;
+  display: inline-block;
+}
+
+.input-container h2::after {
+  content: '🎉';
+  margin-left: 10px;
+  font-size: 0.9em;
 }
 
 #user-name-input {
   width: 100%;
-  padding: 18px;
-  font-size: 1.2rem;
-  border: 3px solid #dc2626;
-  border-radius: 4px;
-  margin: 25px 0;
+  padding: clamp(0.875rem, 2vw, 1.125rem);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  border: 2px solid rgba(220, 38, 38, 0.3);
+  border-radius: 12px;
+  margin: clamp(1.5rem, 3vw, 2rem) 0;
   text-align: center;
-  background: rgba(251, 113, 113, 0.2); /* قرمز ملایم */
-  color: #991b1b; /* قرمز تیره‌تر */
-  transition: all 0.3s ease;
-  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.9);
+  color: #991b1b;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  letter-spacing: 0.5px;
 }
 
 #user-name-input:focus {
   outline: none;
-  border-color: #fb923c; /* نارنجی گرم */
-  box-shadow: 0 0 0 2px #fb923c, 0 0 0 4px #f87171;
-  transform: scale(1.02);
-  background: rgba(251, 113, 113, 0.4);
+  border-color: #dc2626;
+  box-shadow: 
+    0 0 0 4px rgba(220, 38, 38, 0.15),
+    0 4px 20px rgba(220, 38, 38, 0.2);
+  background: white;
+  transform: translateY(-2px);
 }
 
 #user-name-input::placeholder {
-  color: rgba(220, 38, 38, 0.6);
+  color: rgba(220, 38, 38, 0.5);
+  font-weight: 500;
 }
 
 #start-celebration-btn {
-  background: linear-gradient(to right, #dc2626, #f87171); /* گرادیانت قرمز-نارنجی */
+  background: linear-gradient(135deg, #dc2626, #f87171);
   color: white;
   border: none;
-  padding: 18px 40px;
-  font-size: 1.3rem;
-  border-radius: 4px;
+  padding: clamp(1rem, 2vw, 1.25rem) clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: bold;
-  margin-top: 15px;
-  letter-spacing: 1px;
-  box-shadow: 4px 4px 0 #7f1d1d, 6px 6px 0 #f87171; /* سایه‌های مشکی-قرمز */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 700;
+  margin-top: 0.5rem;
+  letter-spacing: 0.5px;
   position: relative;
-  top: 0;
-  left: 0;
+  overflow: hidden;
+  box-shadow: 
+    0 8px 32px rgba(220, 38, 38, 0.3),
+    0 4px 12px rgba(220, 38, 38, 0.2);
 }
 
 #start-celebration-btn:hover {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0 #7f1d1d, 4px 4px 0 #f87171;
-  top: 2px;
-  left: 2px;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 12px 40px rgba(220, 38, 38, 0.4),
+    0 6px 20px rgba(220, 38, 38, 0.3);
 }
 
-/* Volume reminder styles */
+#start-celebration-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+#start-celebration-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+#start-celebration-btn:hover::after {
+  left: 100%;
+}
+
+/* Volume Reminder - بهبود یافته */
 #volume-reminder {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, rgba(255, 247, 237, 0.95), rgba(254, 226, 226, 0.98));
+  background: linear-gradient(45deg, 
+    rgba(255, 247, 237, 0.98), 
+    rgba(254, 226, 226, 0.97));
   display: none;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   color: #dc2626;
   opacity: 0;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 0.6s ease;
   z-index: 1000;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
+  padding: 20px;
 }
 
 #volume-reminder.show {
   opacity: 1;
+  display: flex;
+}
+
+.volume-content {
+  background: rgba(255, 255, 255, 0.92);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  border-radius: 24px;
+  text-align: center;
+  max-width: min(700px, 90vw);
+  width: 100%;
+  box-shadow: 
+    0 20px 60px rgba(220, 38, 38, 0.15),
+    0 8px 32px rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 #volume-icon {
-  font-size: 64px;
-  margin-bottom: 30px;
+  font-size: clamp(3rem, 8vw, 5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
   color: #dc2626;
-  text-shadow: 2px 2px 0 #f87171, 4px 4px 0 #fee2e2;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  animation: gentlePulse 2s infinite ease-in-out;
+  display: inline-block;
 }
 
 #volume-reminder h2 {
-  font-size: 2.8em;
-  margin-bottom: 25px;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
   color: #dc2626;
-  text-shadow: 2px 2px 0 #f87171, 4px 4px 0 #fee2e2;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
 }
 
 .main-instruction {
-  font-size: 1.5em;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
   font-weight: 600;
-  margin: 15px 0;
+  margin: clamp(0.75rem, 2vw, 1rem) 0;
   color: #991b1b;
-  text-align: center;
   line-height: 1.6;
-  padding: 0 20px;
 }
 
 .sub-instruction {
-  font-size: 1.3em;
-  margin: 12px 0;
-  color: #f87171;
-  text-align: center;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  margin: clamp(0.5rem, 1.5vw, 0.75rem) 0;
+  color: #dc2626;
   line-height: 1.5;
-  padding: 0 20px;
+  opacity: 0.9;
 }
 
 .tip {
-  font-size: 1.1em;
+  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
   color: #dc2626;
   font-style: italic;
-  margin-top: 25px;
-  background: rgba(251, 113, 113, 0.2);
-  padding: 12px 24px;
-  border-radius: 4px;
-  backdrop-filter: blur(10px);
-  border: 2px solid #f87171;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  background: rgba(251, 113, 113, 0.1);
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.25rem, 3vw, 1.5rem);
+  border-radius: 12px;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  display: inline-block;
 }
 
+/* Hold Reminder - بهبود یافته */
 #hold-reminder {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  margin-right: auto;
-  margin-left: auto;
-  width: 80%;
-  height: 10%;
-  background-color: rgba(220, 38, 38, 0.15);
+  margin: 0 auto;
+  width: min(90%, 800px);
+  height: auto;
+  min-height: 80px;
+  background: rgba(255, 255, 255, 0.95);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   color: #991b1b;
   opacity: 0;
-  transition: opacity 1s ease-in-out;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   border-top: 3px solid #dc2626;
-  border-radius: 8px 8px 0 0;
-  box-shadow: 0 -4px 0 #f87171;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 
+    0 -10px 40px rgba(220, 38, 38, 0.2),
+    0 -4px 20px rgba(220, 38, 38, 0.1);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  transform: translateY(100%);
 }
 
 #hold-reminder.show {
   opacity: 1;
+  transform: translateY(0);
 }
 
+#hold-reminder p {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  color: #dc2626;
+  line-height: 1.4;
+}
+
+/* Congratulation Overlay - بهبود یافته */
 #congratulation-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 247, 237, 0.95);
+  background: rgba(255, 247, 237, 0.97);
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0;
-  transition: opacity 1s ease;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   z-index: 9999;
+  padding: 20px;
 }
 
 #congratulation-text {
-  font-size: 4.5em;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
   text-align: center;
-  font-weight: bold;
-  padding: 20px 40px;
-  
-  /* پالت جدید: نارنجی-قرمز-مشکی با حس جشن گرم و جذاب */
+  font-weight: 900;
+  padding: clamp(1rem, 3vw, 2rem);
   background: linear-gradient(
-    45deg,
-    #dc2626,  /* قرمز غنی */
-    #f87171,  /* قرمز ملایم */
-    #fb923c,  /* نارنجی گرم */
-    #1f2937,  /* خاکستری-مشکی عمیق */
-    #ef4444   /* قرمز روشن */
+    135deg,
+    #dc2626 0%,
+    #f87171 25%,
+    #fb923c 50%,
+    #dc2626 75%,
+    #991b1b 100%
   );
-  
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  
-  animation: pixelGlow 2s ease-in-out infinite alternate;
-  text-shadow: 2px 2px 0 #fee2e2, 4px 4px 0 #fff7ed;
+  animation: celebrationText 3s ease-in-out infinite alternate;
+  text-shadow: 
+    2px 2px 4px rgba(220, 38, 38, 0.1),
+    4px 4px 8px rgba(254, 226, 226, 0.2);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
 }
 
-@keyframes pixelGlow {
+/* Song Countdown Timer - بهبود یافته */
+.song-countdown {
+  position: fixed;
+  bottom: clamp(1rem, 3vw, 1.5rem);
+  left: clamp(1rem, 3vw, 1.5rem);
+  display: none;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 0.75rem);
+  background: linear-gradient(135deg, #dc2626, #f87171);
+  color: white;
+  padding: clamp(0.75rem, 2vw, 1rem) clamp(1.25rem, 3vw, 1.5rem);
+  border-radius: 50px;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  font-weight: 700;
+  z-index: 1002;
+  box-shadow: 
+    0 8px 32px rgba(220, 38, 38, 0.3),
+    0 4px 16px rgba(220, 38, 38, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: gentleCountdown 3s infinite alternate ease-in-out;
+}
+
+.countdown-number {
+  background: white;
+  color: #dc2626;
+  width: clamp(32px, 4vw, 40px);
+  height: clamp(32px, 4vw, 40px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-family: 'Courier New', 'SF Mono', monospace;
+  font-weight: 800;
+  box-shadow: 
+    0 4px 12px rgba(220, 38, 38, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  transition: transform 0.3s ease;
+}
+
+.countdown-label {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.countdown-label small {
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  opacity: 0.9;
+  font-weight: 600;
+}
+
+/* Confetti Canvas */
+canvas#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+/* Animations جدید و بهبود یافته */
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.01);
+  }
+}
+
+@keyframes gentlePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes celebrationText {
   0% {
-    filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.8));
-    transform: translateY(0);
+    filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.4));
+    transform: translateY(0) rotate(-1deg);
   }
   100% {
-    filter: drop-shadow(0 0 24px rgba(239, 68, 68, 0.8));
-    transform: translateY(-6px);
+    filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.8));
+    transform: translateY(-10px) rotate(1deg);
   }
 }
 
-/* Add some cute decorative elements */
-.input-container::before {
-  content: "❤️";
-  position: absolute;
-  top: -20px;
-  left: -20px;
-  font-size: 2em;
-  filter: drop-shadow(2px 2px 0 #f87171);
+@keyframes gentleCountdown {
+  0% {
+    transform: scale(1);
+    box-shadow: 
+      0 8px 32px rgba(220, 38, 38, 0.3),
+      0 4px 16px rgba(220, 38, 38, 0.2);
+  }
+  100% {
+    transform: scale(1.03);
+    box-shadow: 
+      0 12px 40px rgba(220, 38, 38, 0.4),
+      0 6px 20px rgba(220, 38, 38, 0.3);
+  }
 }
 
-.input-container::after {
-  content: "🎂";
-  position: absolute;
-  bottom: -20px;
-  right: -20px;
-  font-size: 2em;
-  filter: drop-shadow(2px 2px 0 #f87171);
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+  .input-container {
+    padding: 1.5rem;
+    border-radius: 20px;
+  }
+  
+  #hold-reminder {
+    width: 95%;
+    border-radius: 16px 16px 0 0;
+  }
+  
+  .song-countdown {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.25rem;
+  }
+  
+  .countdown-label small {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  #volume-reminder h2,
+  .input-container h2 {
+    font-size: 1.6rem;
+  }
+  
+  .main-instruction {
+    font-size: 1.1rem;
+  }
+  
+  .sub-instruction {
+    font-size: 1rem;
+  }
+  
+  #congratulation-text {
+    font-size: 2.2rem;
+    padding: 1rem;
+  }
+  
+  #hold-reminder {
+    padding: 1rem;
+  }
+}
+
+/* Support for prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .input-container,
+  .volume-content,
+  #hold-reminder {
+    background: rgba(15, 23, 42, 0.92);
+    border-color: rgba(220, 38, 38, 0.3);
+  }
+  
+  #user-name-input {
+    background: rgba(30, 41, 59, 0.9);
+    color: #fecaca;
+    border-color: rgba(220, 38, 38, 0.4);
+  }
+  
+  #user-name-input::placeholder {
+    color: rgba(254, 202, 202, 0.5);
+  }
 }
