@@ -1,4 +1,4 @@
-# 🎂 3D Birthday Cake Experience
+# 🎂 3D  Birthday Cake Experience
 Create a magical birthday moment with an interactive 3D cake that responds to your touch—or your breath! Perfect for birthdays, virtual parties, or just a cheerful surprise.
 
 ---
